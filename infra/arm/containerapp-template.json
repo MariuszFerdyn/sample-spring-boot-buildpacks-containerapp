@@ -1,0 +1,130 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Container Apps environment to create."
+      }
+    },
+    "containerAppName": {
+      "type": "string",
+      "defaultValue": "[concat(parameters('environmentName'), '-app')]",
+      "metadata": {
+        "description": "Name of the Container App that will host the Spring Boot image."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region for all deployed resources."
+      }
+    },
+    "containerImage": {
+      "type": "string",
+      "defaultValue": "mafamafa/sample-spring-boot-buildpacks-containerapp:latest",
+      "metadata": {
+        "description": "OCI image to deploy to the Container App."
+      }
+    },
+    "containerCpu": {
+      "type": "string",
+      "defaultValue": "0.5",
+      "allowedValues": [
+        "0.25",
+        "0.5",
+        "0.75",
+        "1",
+        "1.25",
+        "1.5",
+        "1.75",
+        "2"
+      ],
+      "metadata": {
+        "description": "vCPU cores allocated to the container."
+      }
+    },
+    "containerMemory": {
+      "type": "string",
+      "defaultValue": "1Gi",
+      "allowedValues": [
+        "0.5Gi",
+        "1Gi",
+        "1.5Gi",
+        "2Gi",
+        "3Gi",
+        "4Gi"
+      ],
+      "metadata": {
+        "description": "Memory allocated to the container."
+      }
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.App/managedEnvironments",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('environmentName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "workloadProfiles": [
+          {
+            "name": "Consumption",
+            "workloadProfileType": "Consumption"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.App/containerApps",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('containerAppName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.App/managedEnvironments', parameters('environmentName'))]"
+      ],
+      "properties": {
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('environmentName'))]",
+        "configuration": {
+          "activeRevisionsMode": "Single",
+          "ingress": {
+            "external": true,
+            "targetPort": 8080,
+            "transport": "auto",
+            "traffic": [
+              {
+                "weight": 100,
+                "latestRevision": true
+              }
+            ]
+          }
+        },
+        "template": {
+          "containers": [
+            {
+              "name": "spring-app",
+              "image": "[parameters('containerImage')]",
+              "resources": {
+                "cpu": "[parameters('containerCpu')]",
+                "memory": "[parameters('containerMemory')]"
+              }
+            }
+          ],
+          "scale": {
+            "minReplicas": 1,
+            "maxReplicas": 3
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "containerAppUrl": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.App/containerApps', parameters('containerAppName')), '2023-05-01').configuration.ingress.fqdn]"
+    }
+  }
+}

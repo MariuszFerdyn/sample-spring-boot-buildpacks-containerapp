@@ -75,4 +75,24 @@ podman run --rm -p 8080:8080 sample-containerapp
 
 After the container starts, open <http://localhost:8080> to interact with the same UI. Use `Ctrl+C` in the terminal (or `podman stop`/`docker stop` from another shell) to stop the container.
 
+### ☁️ (Optional - you can just use mafamafa/sample-spring-boot-buildpacks-containerapp:latest) Push the image to Docker Hub
+
+Tag the image and push it to your Docker Hub repository (`mafamafa/sample-spring-boot-buildpacks-containerapp`).
+
+```bash
+docker login
+docker tag sample-containerapp mafamafa/sample-spring-boot-buildpacks-containerapp:latest   # Modify to your registry
+docker push mafamafa/sample-spring-boot-buildpacks-containerapp:latest                      # Modify to your registry
+```
+
+If you build a new version later, rebuild with `pack build` and rerun the tag/push commands to publish the update.
+
+## 🌐 Deploy to Azure Container Apps
+
+Launch the ARM template in the Azure Portal using the button below:
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMariuszFerdyn%2Fsample-spring-boot-buildpacks-containerapp%2Fmain%2Finfra%2Farm%2Fcontainerapp-template.json)
+
+This pre-populates the deployment experience with the Container Apps environment and the `mafamafa/sample-spring-boot-buildpacks-containerapp` image. Adjust parameters like CPU, memory, or image tag before submitting if needed.
+
 
