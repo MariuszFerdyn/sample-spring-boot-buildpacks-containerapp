@@ -68,5 +68,6 @@ Make sure Docker Desktop, Docker Engine, or Podman is installed and running, the
 docker run --rm -p 8080:8080 sample-containerapp
 ```
 
-After the container starts, open <http://localhost:8080> to interact with the same UI. Use `Ctrl+C` in the terminal (or `podman stop`/`docker stop` from another shell) to stop the container.
+After the container starts, open <http://localhost:8080> to interact with the same UI. Use `Ctrl+C` in the terminal to stop the container.
+
 
