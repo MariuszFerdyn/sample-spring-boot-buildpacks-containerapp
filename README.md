@@ -12,7 +12,7 @@ sudo apt install openjdk-17-jdk maven
 ```
 
 
-*(Optional)* Install the [Paketo Buildpacks `pack` CLI](https://buildpacks.io/docs/tools/pack/) if you plan to build an OCI image locally.
+Install the [Paketo Buildpacks `pack` CLI](https://buildpacks.io/docs/tools/pack/) if you plan to build an OCI image locally.
 
 ```bash
 sudo apt update
@@ -58,7 +58,6 @@ Use the Paketo Java buildpack to build an OCI image without a Dockerfile:
 pack build sample-containerapp --path . --builder paketobuildpacks/builder-jammy-base
 ```
 
-Deploy the resulting image (`sample-containerapp`) to any OCI-compatible runtime such as Azure Container Apps.
 
 ### ▶️ Run the `sample-containerapp` image locally
 
@@ -68,6 +67,12 @@ Make sure Docker Desktop, Docker Engine, or Podman is installed and running, the
 docker run --rm -p 8080:8080 sample-containerapp
 ```
 
-After the container starts, open <http://localhost:8080> to interact with the same UI. Use `Ctrl+C` in the terminal to stop the container.
+Or, with Podman:
+
+```bash
+podman run --rm -p 8080:8080 sample-containerapp
+```
+
+After the container starts, open <http://localhost:8080> to interact with the same UI. Use `Ctrl+C` in the terminal (or `podman stop`/`docker stop` from another shell) to stop the container.
 
 
