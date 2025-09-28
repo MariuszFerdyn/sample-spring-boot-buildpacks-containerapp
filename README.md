@@ -1,2 +1,2 @@
 # sample-spring-boot-buildpacks-containerapp
-ss
+A sample repository demonstrating how to build, package, and deploy a Java Spring Boot application as a container using Cloud Native Buildpacks. This project shows end-to-end automation—from source code to container image—optimized for Azure Container Apps or any cloud-native platform supporting OCI containers. It leverages Buildpacks (such as Paketo) to produce efficient, production-ready images without the need for a custom Dockerfile, and highlights best practices for cloud application deployment with Java and Spring Boot.
